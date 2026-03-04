@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Critical for fixing Error 153: Allows YouTube to verify the site origin -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+<title>neovvy — Video Editor Portfolio</title>
+
+<!-- GOOGLE FONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<!-- LUCIDE ICONS -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root{
+  --bg:#0b0b0f;
+  --text:#ffffff;
+  --card:#111;
+  --accent:#6c5cff;
+  --header-bg: rgba(11, 11, 15, 0.85);
+}
+
+body.light{
+  --bg:#f5f5f7;
+  --text:#111;
+  --card:#ffffff;
+  --header-bg: rgba(245, 245, 247, 0.85);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:background .4s ease,color .4s ease;
+  overflow-x:hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =============================
+   HEADER & NAVIGATION
+============================== */
+header{
+  position:fixed;
+  width:100%;
+  top:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 5%;
+  background: var(--header-bg);
+  backdrop-filter:blur(15px);
+  z-index:1000;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+body.light header { border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+header h1{font-weight:800; font-size:20px; letter-spacing: -0.5px;}
+
+.nav-actions { display: flex; align-items: center; gap: 15px; }
+
+nav { display: flex; align-items: center; gap: 25px; }
+
+nav a{
+  text-decoration:none;
+  color:var(--text);
+  opacity:0.6;
+  font-weight:500;
+  font-size: 14px;
+  transition:.3s;
+}
+
+nav a:hover{opacity:1; color:var(--accent);}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.icon-btn:hover { background: rgba(108, 92, 255, 0.1); color: var(--accent); }
+
+.menu-trigger { display: none; }
+
+/* =============================
+   VIDEO GRID & CARDS
+============================== */
+section{ padding: 120px 5% 60px; }
+
+.section-title{
+  font-size: clamp(28px, 6vw, 44px);
+  font-weight:800;
+  margin-bottom:40px;
+  opacity:0;
+  transform:translateY(20px);
+  transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.section-title.visible { opacity:1; transform:translateY(0); }
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+  gap:25px;
+}
+
+.video-card{
+  background:var(--card);
+  border-radius:16px;
+  overflow:hidden;
+  aspect-ratio: 16/9;
+  box-shadow:0 15px 35px rgba(0,0,0,0.25);
+  opacity:0;
+  transform:translateY(20px);
+  transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+}
+
+.video-card.visible { opacity:1; transform:translateY(0); }
+
+.video-card:hover { transform: translateY(-5px); box-shadow:0 20px 45px rgba(0,0,0,0.4); }
+
+iframe, video { 
+  width:100%; 
+  height:100%; 
+  border:none; 
+  display: block; 
+  object-fit: cover; 
+}
+
+/* =============================
+   CONTACT & SOCIALS
+============================== */
+.contact{ text-align:center; padding: 100px 5%; }
+
+.socials{
+  margin-top:40px;
+  display:flex;
+  justify-content:center;
+  flex-wrap: wrap;
+  gap:30px;
+}
+
+.socials a{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  color:var(--text);
+  opacity:.6;
+  font-weight: 500;
+  transition:.3s;
+}
+
+.socials a:hover { opacity:1; color:var(--accent); transform: translateY(-2px); }
+
+footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
+
+/* =============================
+   MOBILE OVERLAY & NAVIGATION
+============================== */
+@media(max-width: 768px) {
+  .menu-trigger { display: flex; }
+  
+  nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 260px;
+    height: 100vh;
+    background: var(--bg);
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    transition: 0.4s ease;
+    z-index: 2000;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+  }
+  
+  nav.active { right: 0; }
+  
+  nav a { font-size: 18px; width: 100%; }
+
+  .nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 1500;
+  }
+  
+  .nav-overlay.active { opacity: 1; visibility: visible; }
+}
+</style>
+</head>
+<body>
+
+<div class="nav-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<header>
+  <h1>neovvy</h1>
+  
+  <div class="nav-actions">
+    <nav id="mainNav">
+      <a href="#commission">Commission</a>
+      <a href="#commercials">Commercials</a>
+      <a href="#motion">Motion</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <button class="icon-btn" onclick="toggleMode()" title="Switch Theme">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </button>
+    
+    <button class="icon-btn menu-trigger" onclick="toggleMenu()">
+      <i data-lucide="menu"></i>
+    </button>
+  </div>
+</header>
+
+<!-- COMMISSION SECTION -->
+<section id="commission">
+  <h2 class="section-title">Commission Works</h2>
+  <div class="grid">
+    <div class="video-card">
+      <video loop muted playsinline preload="metadata" loading="lazy">
+        <source src="resources/mograph.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="video-card">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/ScMzIvxBSi4?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=ScMzIvxBSi4&rel=0&controls=1"
+        allow="autoplay; encrypted-media"
+        referrerpolicy="no-referrer-when-downgrade"
+        loading="lazy"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- COMMERCIALS SECTION -->
+<section id="commercials">
+  <h2 class="section-title">Commercials & VFX</h2>
+  <div class="grid">
+    <div class="video-card">
+      <iframe 
+        src="https://www.youtube-nocookie.com/embed/l482T0yNkeo?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=l482T0yNkeo&rel=0" 
+        referrerpolicy="no-referrer-when-downgrade"
+        allow="autoplay; encrypted-media" 
+        loading="lazy"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="video-card">
+      <iframe 
+        src="https://www.youtube-nocookie.com/embed/ysz5S6PUM-U?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=ysz5S6PUM-U&rel=0" 
+        referrerpolicy="no-referrer-when-downgrade"
+        allow="autoplay; encrypted-media" 
+        loading="lazy"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- MOTION GRAPHICS SECTION -->
+<section id="motion">
+  <h2 class="section-title">Motion Graphics</h2>
+  <div class="grid">
+    <div class="video-card">
+      <!-- Updated with your requested video: GIWOdyER0eA -->
+      <iframe 
+        src="https://www.youtube-nocookie.com/embed/GIWOdyER0eA?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=GIWOdyER0eA&rel=0" 
+        referrerpolicy="no-referrer-when-downgrade"
+        allow="autoplay; encrypted-media" 
+        loading="lazy"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="video-card">
+      <iframe 
+        src="https://www.youtube-nocookie.com/embed/9No-FiEInLA?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=9No-FiEInLA&rel=0" 
+        referrerpolicy="no-referrer-when-downgrade"
+        allow="autoplay; encrypted-media" 
+        loading="lazy"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <h2>Let's Work Together</h2>
+  <p style="opacity: 0.6; margin: 15px 0 30px;">Available for freelance projects worldwide.</p>
+  
+  <div class="socials">
+    <a href="mailto:yourname@email.com"><i data-lucide="mail"></i> Email</a>
+    <a href="#" target="_blank"><i data-lucide="instagram"></i> Instagram</a>
+    <a href="#" target="_blank"><i data-lucide="youtube"></i> YouTube</a>
+    <a href="#" target="_blank"><i data-lucide="linkedin"></i> LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  © 2026 NEOVVY — ALL RIGHTS RESERVED
+</footer>
+
+<script>
+// Initialize Icons
+lucide.createIcons();
+
+// Mobile Menu Toggle
+function toggleMenu() {
+  const nav = document.getElementById('mainNav');
+  const overlay = document.getElementById('overlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+}
+
+// Theme Toggle logic
+function toggleMode(){
+  document.body.classList.toggle('light');
+  const themeIcon = document.getElementById('themeIcon');
+  const isLight = document.body.classList.contains('light');
+  themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+  lucide.createIcons();
+}
+
+// Performance Optimized Reveal & Autoplay
+const observerOptions = {
+  threshold: 0.2,
+  rootMargin: '50px'
+};
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      
+      // Auto-play local videos only when in view
+      const video = entry.target.querySelector('video');
+      if (video) video.play().catch(e => console.log("Autoplay blocked"));
+    } else {
+      // Pause local video when out of view to save CPU
+      const video = entry.target.querySelector('video');
+      if (video) video.pause();
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.video-card, .section-title').forEach(el => {
+  revealObserver.observe(el);
+});
+
+// Close mobile menu on click
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById('mainNav').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  });
+});
+</script>
+
+</body>
+</html>
