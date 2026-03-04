@@ -3,19 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<!-- Critical for fixing Error 153: Allows YouTube to verify the site origin -->
+<!-- Fixes Error 153: Helps YouTube verify your site identity -->
 <meta name="referrer" content="no-referrer-when-downgrade">
 <title>neovvy — Video Editor Portfolio</title>
 
-<!-- GOOGLE FONT -->
+<!-- GOOGLE FONTS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-<!-- LUCIDE ICONS -->
+<!-- LUCIDE ICONS (Modern & Lightweight) -->
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
+/* =============================
+   1. COLOR & THEME SETTINGS
+============================== */
 :root{
   --bg:#0b0b0f;
   --text:#ffffff;
@@ -39,11 +42,10 @@ body{
   color:var(--text);
   transition:background .4s ease,color .4s ease;
   overflow-x:hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 /* =============================
-   HEADER & NAVIGATION
+   2. HEADER & NAVIGATION
 ============================== */
 header{
   position:fixed;
@@ -65,6 +67,7 @@ header h1{font-weight:800; font-size:20px; letter-spacing: -0.5px;}
 
 .nav-actions { display: flex; align-items: center; gap: 15px; }
 
+/* Desktop Navigation */
 nav { display: flex; align-items: center; gap: 25px; }
 
 nav a{
@@ -78,6 +81,7 @@ nav a{
 
 nav a:hover{opacity:1; color:var(--accent);}
 
+/* Buttons Styling */
 .icon-btn {
   background: none;
   border: none;
@@ -92,10 +96,10 @@ nav a:hover{opacity:1; color:var(--accent);}
 
 .icon-btn:hover { background: rgba(108, 92, 255, 0.1); color: var(--accent); }
 
-.menu-trigger { display: none; }
+.menu-trigger { display: none; } /* Hidden on Desktop */
 
 /* =============================
-   VIDEO GRID & CARDS
+   3. VIDEO GRID STYLING
 ============================== */
 section{ padding: 120px 5% 60px; }
 
@@ -112,6 +116,7 @@ section{ padding: 120px 5% 60px; }
 
 .grid{
   display:grid;
+  /* Automatically fits videos based on screen size */
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
   gap:25px;
 }
@@ -141,7 +146,7 @@ iframe, video {
 }
 
 /* =============================
-   CONTACT & SOCIALS
+   4. CONTACT & SOCIALS
 ============================== */
 .contact{ text-align:center; padding: 100px 5%; }
 
@@ -169,30 +174,42 @@ iframe, video {
 footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
 
 /* =============================
-   MOBILE OVERLAY & NAVIGATION
+   5. MOBILE RESPONSIVE UI
 ============================== */
 @media(max-width: 768px) {
+  header { padding: 15px 5%; }
+  
+  /* Show the hamburger menu icon */
   .menu-trigger { display: flex; }
   
+  /* Slide-in Mobile Menu Styling */
   nav {
     position: fixed;
     top: 0;
-    right: -100%;
-    width: 260px;
+    right: -100%; /* Hidden off-screen */
+    width: 280px;
     height: 100vh;
     background: var(--bg);
     flex-direction: column;
     justify-content: center;
-    padding: 40px;
-    transition: 0.4s ease;
+    align-items: flex-start;
+    padding: 60px 40px;
+    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 2000;
-    box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.3);
   }
   
+  /* When the 'active' class is added via JS */
   nav.active { right: 0; }
   
-  nav a { font-size: 18px; width: 100%; }
+  nav a { 
+    font-size: 24px; 
+    font-weight: 800;
+    width: 100%; 
+    padding: 10px 0;
+  }
 
+  /* Dark Overlay when menu is open */
   .nav-overlay {
     position: fixed;
     top: 0;
@@ -200,6 +217,7 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
     width: 100vw;
     height: 100vh;
     background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
     opacity: 0;
     visibility: hidden;
     transition: 0.3s;
@@ -207,46 +225,78 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
   }
   
   .nav-overlay.active { opacity: 1; visibility: visible; }
+
+  /* Close button inside mobile menu */
+  .close-menu {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: block;
+  }
+}
+
+@media(min-width: 769px) {
+    .close-menu { display: none; }
 }
 </style>
 </head>
 <body>
 
+<!-- Dark layer behind mobile menu -->
 <div class="nav-overlay" id="overlay" onclick="toggleMenu()"></div>
 
 <header>
   <h1>neovvy</h1>
   
   <div class="nav-actions">
+    <!-- Main Navigation (Desktop and Mobile) -->
     <nav id="mainNav">
+      <!-- Mobile Close Button -->
+      <button class="icon-btn close-menu" onclick="toggleMenu()">
+        <i data-lucide="x"></i>
+      </button>
+      
       <a href="#commission">Commission</a>
       <a href="#commercials">Commercials</a>
       <a href="#motion">Motion</a>
       <a href="#contact">Contact</a>
     </nav>
 
+    <!-- Theme Toggle -->
     <button class="icon-btn" onclick="toggleMode()" title="Switch Theme">
       <i data-lucide="sun" id="themeIcon"></i>
     </button>
     
+    <!-- Mobile Hamburger Trigger -->
     <button class="icon-btn menu-trigger" onclick="toggleMenu()">
       <i data-lucide="menu"></i>
     </button>
   </div>
 </header>
 
+<!-- 
+    VIDEO MANAGEMENT GUIDE:
+    -----------------------
+    To add a YouTube Video:
+    1. Find video on YouTube -> Share -> Embed.
+    2. Copy the URL (the bit inside src="...")
+    3. Add "&autoplay=1&mute=1&loop=1&playlist=YOUR_VIDEO_ID" to the end of the URL.
+-->
+
 <!-- COMMISSION SECTION -->
 <section id="commission">
   <h2 class="section-title">Commission Works</h2>
   <div class="grid">
+    <!-- Local File Video -->
     <div class="video-card">
       <video loop muted playsinline preload="metadata" loading="lazy">
         <source src="resources/mograph.mp4" type="video/mp4">
       </video>
     </div>
+    <!-- YouTube Video -->
     <div class="video-card">
       <iframe
-        src="https://www.youtube-nocookie.com/embed/ScMzIvxBSi4?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=ScMzIvxBSi4&rel=0&controls=1"
+        src="https://www.youtube-nocookie.com/embed/ScMzIvxBSi4?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=ScMzIvxBSi4&rel=0"
         allow="autoplay; encrypted-media"
         referrerpolicy="no-referrer-when-downgrade"
         loading="lazy"
@@ -286,7 +336,6 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
   <h2 class="section-title">Motion Graphics</h2>
   <div class="grid">
     <div class="video-card">
-      <!-- Updated with your requested video: GIWOdyER0eA -->
       <iframe 
         src="https://www.youtube-nocookie.com/embed/GIWOdyER0eA?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=GIWOdyER0eA&rel=0" 
         referrerpolicy="no-referrer-when-downgrade"
@@ -324,30 +373,34 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
 </footer>
 
 <script>
-// Initialize Icons
+// 1. Initialize Lucide Icons
 lucide.createIcons();
 
-// Mobile Menu Toggle
+// 2. Mobile Menu Toggle Logic
 function toggleMenu() {
   const nav = document.getElementById('mainNav');
   const overlay = document.getElementById('overlay');
+  
+  // Toggle the 'active' class to show/hide the menu
   nav.classList.toggle('active');
   overlay.classList.toggle('active');
 }
 
-// Theme Toggle logic
+// 3. Light / Dark Mode Toggle
 function toggleMode(){
   document.body.classList.toggle('light');
   const themeIcon = document.getElementById('themeIcon');
   const isLight = document.body.classList.contains('light');
+  
+  // Change icon based on theme
   themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
-  lucide.createIcons();
+  lucide.createIcons(); // Re-render icons
 }
 
-// Performance Optimized Reveal & Autoplay
+// 4. Scroll Animation Logic (Intersection Observer)
 const observerOptions = {
-  threshold: 0.2,
-  rootMargin: '50px'
+  threshold: 0.15, // Trigger when 15% of the element is visible
+  rootMargin: '0px 0px -50px 0px'
 };
 
 const revealObserver = new IntersectionObserver((entries) => {
@@ -357,20 +410,21 @@ const revealObserver = new IntersectionObserver((entries) => {
       
       // Auto-play local videos only when in view
       const video = entry.target.querySelector('video');
-      if (video) video.play().catch(e => console.log("Autoplay blocked"));
+      if (video) video.play().catch(e => console.log("Autoplay waiting for interaction"));
     } else {
-      // Pause local video when out of view to save CPU
+      // Pause local video when out of view to save battery/CPU
       const video = entry.target.querySelector('video');
       if (video) video.pause();
     }
   });
 }, observerOptions);
 
+// Select all elements we want to animate
 document.querySelectorAll('.video-card, .section-title').forEach(el => {
   revealObserver.observe(el);
 });
 
-// Close mobile menu on click
+// 5. Close mobile menu automatically when clicking a link
 document.querySelectorAll('nav a').forEach(link => {
   link.addEventListener('click', () => {
     document.getElementById('mainNav').classList.remove('active');
