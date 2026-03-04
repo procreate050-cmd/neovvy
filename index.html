@@ -7,45 +7,47 @@
 <meta name="referrer" content="no-referrer-when-downgrade">
 <title>neovvy — Video Editor Portfolio</title>
 
-<!-- GOOGLE FONTS -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-
 <!-- LUCIDE ICONS (Modern & Lightweight) -->
 <script src="https://unpkg.com/lucide@latest"></script>
 
+<!-- SYSTEM FONT STACK (Apple/Modern) -->
 <style>
 /* =============================
    1. COLOR & THEME SETTINGS
 ============================== */
 :root{
-  --bg:#0b0b0f;
+  --bg:#050505;
   --text:#ffffff;
-  --card:#111;
+  --card: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.08);
   --accent:#6c5cff;
-  --header-bg: rgba(11, 11, 15, 0.85);
+  --header-bg: rgba(11, 11, 15, 0.7);
+  --glass-blur: 20px;
 }
 
 body.light{
-  --bg:#f5f5f7;
-  --text:#111;
-  --card:#ffffff;
-  --header-bg: rgba(245, 245, 247, 0.85);
+  --bg:#fbfbfd;
+  --text:#1d1d1f;
+  --card: rgba(0, 0, 0, 0.02);
+  --card-border: rgba(0, 0, 0, 0.05);
+  --header-bg: rgba(255, 255, 255, 0.7);
 }
 
 *{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
 
 body{
-  font-family:'Inter',sans-serif;
+  /* Apple System Font Stack - San Francisco */
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", "Helvetica Neue", Arial, sans-serif;
   background:var(--bg);
   color:var(--text);
-  transition:background .4s ease,color .4s ease;
+  transition:background .6s cubic-bezier(0.4, 0, 0.2, 1), color .6s cubic-bezier(0.4, 0, 0.2, 1);
   overflow-x:hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* =============================
-   2. HEADER & NAVIGATION
+   2. HEADER & NAVIGATION (Glass)
 ============================== */
 header{
   position:fixed;
@@ -54,41 +56,82 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:15px 5%;
+  padding:18px 6%;
   background: var(--header-bg);
-  backdrop-filter:blur(15px);
-  z-index: 2000; /* Increased to stay above the overlay */
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  z-index: 2000;
+  border-bottom: 1px solid var(--card-border);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body.light header { border-bottom: 1px solid rgba(0,0,0,0.05); }
+header.music-active {
+  background: rgba(108, 92, 255, 0.05);
+  backdrop-filter: blur(40px);
+}
 
-/* Clickable Logo Styling */
 .logo {
   text-decoration: none;
   color: var(--text);
-  transition: opacity 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2010;
 }
 
-.logo:hover { opacity: 0.8; }
+.logo:hover { transform: scale(1.02); }
+header h1{font-weight:700; font-size:22px; letter-spacing: -0.8px;}
 
-header h1{font-weight:800; font-size:20px; letter-spacing: -0.5px;}
-
-.nav-actions { display: flex; align-items: center; gap: 10px; }
+.nav-actions { display: flex; align-items: center; gap: 12px; z-index: 2010; }
 
 /* Desktop Navigation */
-nav { display: flex; align-items: center; gap: 25px; }
+nav { 
+  display: flex; 
+  align-items: center; 
+  gap: 30px; 
+}
 
 nav a{
   text-decoration:none;
   color:var(--text);
-  opacity:0.6;
+  opacity:0.5;
   font-weight:500;
   font-size: 14px;
-  transition:.3s;
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
 nav a:hover{opacity:1; color:var(--accent);}
+
+/* FULL-WIDTH HEADER VISUALIZER */
+.visualizer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none; 
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0;
+  pointer-events: none; 
+  z-index: 1;
+  opacity: 0.2; 
+}
+
+.visualizer.active { display: flex; }
+
+.bar {
+  flex: 1;
+  margin: 0 1px;
+  background: var(--accent);
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom;
+  animation: bounce-large 1s ease-in-out infinite alternate;
+}
+
+@keyframes bounce-large {
+  0% { transform: scaleY(0.05); opacity: 0.1; }
+  100% { transform: scaleY(1); opacity: 0.6; }
+}
 
 /* Buttons Styling */
 .icon-btn {
@@ -96,70 +139,94 @@ nav a:hover{opacity:1; color:var(--accent);}
   border: none;
   color: var(--text);
   cursor: pointer;
-  padding: 8px;
+  padding: 10px;
   border-radius: 50%;
   display: flex;
   align-items: center;
-  transition: 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.icon-btn:hover { background: rgba(108, 92, 255, 0.1); color: var(--accent); }
+.icon-btn:hover { 
+  background: var(--card-border); 
+  transform: translateY(-2px);
+}
 
-/* Audio Visualizer Animation */
 .music-playing {
   color: var(--accent) !important;
-  animation: pulse 1.5s infinite;
+  animation: musicPulse 2s infinite ease-in-out;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes musicPulse {
+  0% { box-shadow: 0 0 0 0 rgba(108, 92, 255, 0.4); }
+  70% { box-shadow: 0 0 0 15px rgba(108, 92, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(108, 92, 255, 0); }
 }
 
-.menu-trigger { display: none; } /* Hidden on Desktop */
+.menu-trigger { display: none; }
 
 /* =============================
-   3. VIDEO GRID & REVEAL STYLING
+   3. VIDEO GRID & GLASS CARDS
 ============================== */
-section{ padding: 120px 5% 60px; }
+section{ padding: 140px 6% 80px; }
+
+/* Special centering for Showreel section */
+.center-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.center-section .grid {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1000px;
+}
 
 .section-title, .reveal-text {
   opacity:0;
-  transform:translateY(20px);
-  transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform:translateY(30px);
+  transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .section-title{
-  font-size: clamp(28px, 6vw, 44px);
-  font-weight:800;
-  margin-bottom:40px;
+  font-size: clamp(32px, 7vw, 56px);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  margin-bottom:50px;
 }
 
 .section-title.visible, .reveal-text.visible { opacity:1; transform:translateY(0); }
 
 .grid{
   display:grid;
-  /* Automatically fits videos based on screen size */
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
-  gap:25px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+  gap:35px;
 }
 
-.video-card{
-  background:var(--card);
-  border-radius:16px;
+.video-card {
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
   overflow:hidden;
   aspect-ratio: 16/9;
-  box-shadow:0 15px 35px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   opacity:0;
-  transform:translateY(20px);
-  transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-  position: relative;
+  transform:translateY(40px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  width: 100%;
 }
 
 .video-card.visible { opacity:1; transform:translateY(0); }
 
-.video-card:hover { transform: translateY(-5px); box-shadow:0 20px 45px rgba(0,0,0,0.4); }
+.video-card:hover { 
+  transform: translateY(-8px) scale(1.01); 
+  border-color: var(--accent);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); 
+}
 
 iframe, video { 
   width:100%; 
@@ -170,91 +237,104 @@ iframe, video {
 }
 
 /* =============================
-   4. CONTACT & SOCIALS
+   4. CONTACT & FOOTER
 ============================== */
-.contact{ text-align:center; padding: 100px 5%; }
+.contact{ text-align:center; padding: 120px 6%; }
 
 .socials{
-  margin-top:40px;
+  margin-top:50px;
   display:flex;
   justify-content:center;
   flex-wrap: wrap;
-  gap:30px;
+  gap:20px;
 }
 
 .socials a{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:10px;
+  padding: 12px 24px;
   text-decoration:none;
   color:var(--text);
-  opacity:.6;
-  font-weight: 500;
-  transition:.3s;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.2px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.socials a:hover { opacity:1; color:var(--accent); transform: translateY(-2px); }
+.socials a:hover { 
+  background: var(--accent); 
+  color: white; 
+  border-color: var(--accent);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(108, 92, 255, 0.3);
+}
 
-footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
+footer{ text-align:center; padding:60px; opacity:0.4; font-size: 13px; font-weight: 500; letter-spacing: -0.2px; }
 
 /* =============================
    5. MOBILE RESPONSIVE UI
 ============================== */
 @media(max-width: 768px) {
-  header { padding: 15px 5%; }
-  
-  /* Show the hamburger menu icon */
   .menu-trigger { display: flex; }
   
-  /* Slide-in Mobile Menu Styling */
   nav {
     position: fixed;
     top: 0;
-    right: -100%; /* Hidden off-screen */
-    width: 280px;
+    right: -100%;
+    width: 85%;
+    max-width: 320px;
     height: 100vh;
-    background: var(--bg);
+    background: var(--header-bg);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     padding: 60px 40px;
-    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 2000;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+    border-left: 1px solid var(--card-border);
   }
   
-  /* When the 'active' class is added via JS */
   nav.active { right: 0; }
+
+  nav.music-active {
+    background: rgba(108, 92, 255, 0.08);
+  }
   
   nav a { 
-    font-size: 24px; 
-    font-weight: 800;
+    font-size: 28px; 
+    font-weight: 700;
+    letter-spacing: -1px;
     width: 100%; 
-    padding: 10px 0;
+    padding: 15px 0;
+    opacity: 0.4;
   }
 
-  /* Dark Overlay when menu is open */
   .nav-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
     opacity: 0;
     visibility: hidden;
-    transition: 0.3s;
-    z-index: 1500; /* Set below header z-index */
+    transition: 0.4s ease;
+    z-index: 1500;
   }
   
   .nav-overlay.active { opacity: 1; visibility: visible; }
 
-  /* Close button inside mobile menu */
   .close-menu {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 30px;
+    right: 30px;
     display: block;
   }
 }
@@ -271,55 +351,75 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
   <source src="audio/bgm.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Dark layer behind mobile menu -->
 <div class="nav-overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<header>
-  <!-- Logo Link Redirects to Home -->
+<header id="header">
+  <!-- LOGO -->
   <a href="index.html" class="logo"><h1>neovvy</h1></a>
+
+  <!-- FULL-WIDTH VISUALIZER -->
+  <div class="visualizer" id="visualizer">
+    <!-- Bars for dense look -->
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>
   
   <div class="nav-actions">
-    <!-- Main Navigation (Desktop and Mobile) -->
+    <!-- NAVIGATION -->
     <nav id="mainNav">
-      <!-- Mobile Close Button -->
       <button class="icon-btn close-menu" onclick="toggleMenu()">
         <i data-lucide="x"></i>
       </button>
       
+      <a href="#showreel">Showreel</a>
       <a href="#commission">Commission</a>
       <a href="#commercials">Commercials</a>
       <a href="#motion">Motion</a>
       <a href="#contact">Contact</a>
     </nav>
 
-    <!-- Music Toggle -->
-    <button class="icon-btn" onclick="toggleMusic()" title="Toggle Background Music">
+    <!-- MUSIC & THEME CONTROLS -->
+    <button class="icon-btn" onclick="toggleMusic()" title="Toggle Music">
       <i data-lucide="music" id="musicIcon"></i>
     </button>
 
-    <!-- Theme Toggle -->
     <button class="icon-btn" onclick="toggleMode()" title="Switch Theme">
       <i data-lucide="sun" id="themeIcon"></i>
     </button>
     
-    <!-- Mobile Hamburger Trigger -->
     <button class="icon-btn menu-trigger" onclick="toggleMenu()">
       <i data-lucide="menu"></i>
     </button>
   </div>
 </header>
 
-<!-- COMMISSION SECTION -->
-<section id="commission">
-  <h2 class="section-title">Commission Works</h2>
+<!-- SHOWREEL SECTION (Centered) -->
+<section id="showreel" class="center-section">
+  <h2 class="section-title">Showreel</h2>
   <div class="grid">
-    <!-- Local File Video -->
+    <div class="video-card">
+      <!-- REPLACE THE ID BELOW WITH YOUR MAIN SHOWREEL VIDEO ID -->
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/ScMzIvxBSi4?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=ScMzIvxBSi4&rel=0"
+        allow="autoplay; encrypted-media"
+        referrerpolicy="no-referrer-when-downgrade"
+        loading="lazy"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<section id="commission">
+  <h2 class="section-title">Commission</h2>
+  <div class="grid">
     <div class="video-card">
       <video loop muted playsinline preload="metadata" loading="lazy">
         <source src="resources/mograph.mp4" type="video/mp4">
       </video>
     </div>
-    <!-- YouTube Video -->
     <div class="video-card">
       <iframe
         src="https://www.youtube-nocookie.com/embed/ScMzIvxBSi4?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=ScMzIvxBSi4&rel=0"
@@ -332,9 +432,8 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
   </div>
 </section>
 
-<!-- COMMERCIALS SECTION -->
 <section id="commercials">
-  <h2 class="section-title">Commercials & VFX</h2>
+  <h2 class="section-title">Commercials</h2>
   <div class="grid">
     <div class="video-card">
       <iframe 
@@ -357,9 +456,8 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
   </div>
 </section>
 
-<!-- MOTION GRAPHICS SECTION -->
 <section id="motion">
-  <h2 class="section-title">Motion Graphics</h2>
+  <h2 class="section-title">Motion</h2>
   <div class="grid">
     <div class="video-card">
       <iframe 
@@ -383,8 +481,8 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
 </section>
 
 <section id="contact" class="contact">
-  <h2 class="reveal-text">Let's Work Together</h2>
-  <p class="reveal-text" style="opacity: 0.6; margin: 15px 0 30px;">Available for freelance projects worldwide.</p>
+  <h2 class="reveal-text">Work Together</h2>
+  <p class="reveal-text" style="opacity: 0.6; margin: 20px 0 40px; font-size: 18px; font-weight: 400;">Available for freelance projects worldwide.</p>
   
   <div class="socials reveal-text">
     <a href="mailto:yourname@email.com"><i data-lucide="mail"></i> Email</a>
@@ -399,33 +497,52 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
 </footer>
 
 <script>
-// 1. Initialize Lucide Icons
-lucide.createIcons();
+// Safely initialize Lucide Icons
+function initLucide() {
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  } else {
+    // If it fails, retry once after a short delay
+    setTimeout(() => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }, 500);
+  }
+}
 
-// 2. Mobile Menu Toggle Logic
+// Randomize bar heights for visualizer on load
+const bars = document.querySelectorAll('.bar');
+bars.forEach((bar) => {
+  const duration = (Math.random() * 0.4 + 0.6).toFixed(2);
+  const delay = (Math.random() * 0.8).toFixed(2);
+  const height = Math.floor(Math.random() * 65 + 15); 
+  bar.style.animationDuration = `${duration}s`;
+  bar.style.animationDelay = `${delay}s`;
+  bar.style.height = `${height}%`;
+});
+
+// Run initialization
+initLucide();
+
 function toggleMenu() {
   const nav = document.getElementById('mainNav');
   const overlay = document.getElementById('overlay');
-  
-  // Toggle the 'active' class to show/hide the menu
   nav.classList.toggle('active');
   overlay.classList.toggle('active');
 }
 
-// 3. Light / Dark Mode Toggle
 function toggleMode(){
   document.body.classList.toggle('light');
   const themeIcon = document.getElementById('themeIcon');
   const isLight = document.body.classList.contains('light');
-  
-  // Change icon based on theme
   themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
-  lucide.createIcons(); // Re-render icons
+  initLucide();
 }
 
-// 4. Background Music Logic
 const audio = document.getElementById('bgm');
 const musicIcon = document.getElementById('musicIcon');
+const visualizer = document.getElementById('visualizer');
+const nav = document.getElementById('mainNav');
+const header = document.getElementById('header');
 const musicBtn = musicIcon.parentElement;
 let isPlaying = false;
 
@@ -433,48 +550,41 @@ function toggleMusic() {
   if (isPlaying) {
     audio.pause();
     musicBtn.classList.remove('music-playing');
+    visualizer.classList.remove('active');
+    nav.classList.remove('music-active');
+    header.classList.remove('music-active');
   } else {
-    audio.play().catch(err => console.log("User interaction required for audio"));
+    audio.play().catch(err => console.log("Interaction required"));
     musicBtn.classList.add('music-playing');
+    visualizer.classList.add('active');
+    nav.classList.add('music-active');
+    header.classList.add('music-active');
   }
   isPlaying = !isPlaying;
 }
 
-// Autoplay attempt on first interaction
-document.addEventListener('click', () => {
-  if (!isPlaying && audio.paused) {
-    // Interaction unlocks the audio engine.
-  }
-}, { once: true });
-
-// 5. Scroll Animation Logic (Intersection Observer)
 const observerOptions = {
-  threshold: 0.15, // Trigger when 15% of the element is visible
-  rootMargin: '0px 0px -50px 0px'
+  threshold: 0.15,
+  rootMargin: '0px 0px -80px 0px'
 };
 
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if(entry.isIntersecting){
       entry.target.classList.add('visible');
-      
-      // Auto-play local videos only when in view
       const video = entry.target.querySelector('video');
-      if (video) video.play().catch(e => console.log("Autoplay waiting for interaction"));
+      if (video) video.play().catch(e => {});
     } else {
-      // Pause local video when out of view to save battery/CPU
       const video = entry.target.querySelector('video');
       if (video) video.pause();
     }
   });
 }, observerOptions);
 
-// Select all elements we want to animate
 document.querySelectorAll('.video-card, .section-title, .reveal-text').forEach(el => {
   revealObserver.observe(el);
 });
 
-// 6. Close mobile menu automatically when clicking a link
 document.querySelectorAll('nav a').forEach(link => {
   link.addEventListener('click', () => {
     document.getElementById('mainNav').classList.remove('active');
