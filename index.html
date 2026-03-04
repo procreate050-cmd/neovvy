@@ -74,7 +74,7 @@ body.light header { border-bottom: 1px solid rgba(0,0,0,0.05); }
 
 header h1{font-weight:800; font-size:20px; letter-spacing: -0.5px;}
 
-.nav-actions { display: flex; align-items: center; gap: 15px; }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
 
 /* Desktop Navigation */
 nav { display: flex; align-items: center; gap: 25px; }
@@ -105,23 +105,38 @@ nav a:hover{opacity:1; color:var(--accent);}
 
 .icon-btn:hover { background: rgba(108, 92, 255, 0.1); color: var(--accent); }
 
+/* Audio Visualizer Animation */
+.music-playing {
+  color: var(--accent) !important;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 .menu-trigger { display: none; } /* Hidden on Desktop */
 
 /* =============================
-   3. VIDEO GRID STYLING
+   3. VIDEO GRID & REVEAL STYLING
 ============================== */
 section{ padding: 120px 5% 60px; }
 
-.section-title{
-  font-size: clamp(28px, 6vw, 44px);
-  font-weight:800;
-  margin-bottom:40px;
+.section-title, .reveal-text {
   opacity:0;
   transform:translateY(20px);
   transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.section-title.visible { opacity:1; transform:translateY(0); }
+.section-title{
+  font-size: clamp(28px, 6vw, 44px);
+  font-weight:800;
+  margin-bottom:40px;
+}
+
+.section-title.visible, .reveal-text.visible { opacity:1; transform:translateY(0); }
 
 .grid{
   display:grid;
@@ -251,6 +266,11 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
 </head>
 <body>
 
+<!-- Background Music Element -->
+<audio id="bgm" loop>
+  <source src="audio/bgm.mp3" type="audio/mpeg">
+</audio>
+
 <!-- Dark layer behind mobile menu -->
 <div class="nav-overlay" id="overlay" onclick="toggleMenu()"></div>
 
@@ -271,6 +291,11 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
       <a href="#motion">Motion</a>
       <a href="#contact">Contact</a>
     </nav>
+
+    <!-- Music Toggle -->
+    <button class="icon-btn" onclick="toggleMusic()" title="Toggle Background Music">
+      <i data-lucide="music" id="musicIcon"></i>
+    </button>
 
     <!-- Theme Toggle -->
     <button class="icon-btn" onclick="toggleMode()" title="Switch Theme">
@@ -358,10 +383,10 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
 </section>
 
 <section id="contact" class="contact">
-  <h2>Let's Work Together</h2>
-  <p style="opacity: 0.6; margin: 15px 0 30px;">Available for freelance projects worldwide.</p>
+  <h2 class="reveal-text">Let's Work Together</h2>
+  <p class="reveal-text" style="opacity: 0.6; margin: 15px 0 30px;">Available for freelance projects worldwide.</p>
   
-  <div class="socials">
+  <div class="socials reveal-text">
     <a href="mailto:yourname@email.com"><i data-lucide="mail"></i> Email</a>
     <a href="#" target="_blank"><i data-lucide="instagram"></i> Instagram</a>
     <a href="#" target="_blank"><i data-lucide="youtube"></i> YouTube</a>
@@ -398,7 +423,31 @@ function toggleMode(){
   lucide.createIcons(); // Re-render icons
 }
 
-// 4. Scroll Animation Logic (Intersection Observer)
+// 4. Background Music Logic
+const audio = document.getElementById('bgm');
+const musicIcon = document.getElementById('musicIcon');
+const musicBtn = musicIcon.parentElement;
+let isPlaying = false;
+
+function toggleMusic() {
+  if (isPlaying) {
+    audio.pause();
+    musicBtn.classList.remove('music-playing');
+  } else {
+    audio.play().catch(err => console.log("User interaction required for audio"));
+    musicBtn.classList.add('music-playing');
+  }
+  isPlaying = !isPlaying;
+}
+
+// Autoplay attempt on first interaction
+document.addEventListener('click', () => {
+  if (!isPlaying && audio.paused) {
+    // Interaction unlocks the audio engine.
+  }
+}, { once: true });
+
+// 5. Scroll Animation Logic (Intersection Observer)
 const observerOptions = {
   threshold: 0.15, // Trigger when 15% of the element is visible
   rootMargin: '0px 0px -50px 0px'
@@ -421,11 +470,11 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Select all elements we want to animate
-document.querySelectorAll('.video-card, .section-title').forEach(el => {
+document.querySelectorAll('.video-card, .section-title, .reveal-text').forEach(el => {
   revealObserver.observe(el);
 });
 
-// 5. Close mobile menu automatically when clicking a link
+// 6. Close mobile menu automatically when clicking a link
 document.querySelectorAll('nav a').forEach(link => {
   link.addEventListener('click', () => {
     document.getElementById('mainNav').classList.remove('active');
