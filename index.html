@@ -63,6 +63,15 @@ header{
 
 body.light header { border-bottom: 1px solid rgba(0,0,0,0.05); }
 
+/* Clickable Logo Styling */
+.logo {
+  text-decoration: none;
+  color: var(--text);
+  transition: opacity 0.3s ease;
+}
+
+.logo:hover { opacity: 0.8; }
+
 header h1{font-weight:800; font-size:20px; letter-spacing: -0.5px;}
 
 .nav-actions { display: flex; align-items: center; gap: 15px; }
@@ -246,7 +255,8 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
 <div class="nav-overlay" id="overlay" onclick="toggleMenu()"></div>
 
 <header>
-  <h1>neovvy</h1>
+  <!-- Logo Link Redirects to Home -->
+  <a href="index.html" class="logo"><h1>neovvy</h1></a>
   
   <div class="nav-actions">
     <!-- Main Navigation (Desktop and Mobile) -->
