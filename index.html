@@ -57,7 +57,7 @@ header{
   padding:15px 5%;
   background: var(--header-bg);
   backdrop-filter:blur(15px);
-  z-index:1000;
+  z-index: 2000; /* Increased to stay above the overlay */
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
@@ -230,7 +230,7 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
     opacity: 0;
     visibility: hidden;
     transition: 0.3s;
-    z-index: 1500;
+    z-index: 1500; /* Set below header z-index */
   }
   
   .nav-overlay.active { opacity: 1; visibility: visible; }
@@ -283,15 +283,6 @@ footer{ text-align:center; padding:40px; opacity:.3; font-size: 12px; }
     </button>
   </div>
 </header>
-
-<!-- 
-    VIDEO MANAGEMENT GUIDE:
-    -----------------------
-    To add a YouTube Video:
-    1. Find video on YouTube -> Share -> Embed.
-    2. Copy the URL (the bit inside src="...")
-    3. Add "&autoplay=1&mute=1&loop=1&playlist=YOUR_VIDEO_ID" to the end of the URL.
--->
 
 <!-- COMMISSION SECTION -->
 <section id="commission">
